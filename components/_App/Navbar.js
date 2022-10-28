@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react';
 import Link from '../../utils/ActiveLink';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { useForm } from "react-hook-form";
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import axios  from "axios";
+import { useSnackbar } from 'notistack';
+
+
+
+
+
+
 
 const Navbar = () => {
   const [displayAuth, setDisplayAuth] = useState(false);
   const [displayMiniAuth, setDisplayMiniAuth] = useState(false);
   const [sticky, setSticky] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
 
   //sticky menu
 
@@ -42,8 +55,47 @@ const Navbar = () => {
       }
     }, []);
 
+
+  // Signup Form Submit
+
+    // Putting up form validation here --->
+    const formSchema = Yup.object().shape({
+        password: Yup.string()
+        .required('Password is mendatory')
+        .min(3, 'Password must be at 3 char long'),
+        username:Yup.string()
+        .required('Username Is Required')
+        .min(3, 'Username'),
+        confirmPwd: Yup.string()
+        .required('Password is mandatory')
+        .oneOf([Yup.ref('password')], 'Passwords does not match'),
+    })
+    const formOptions = { resolver: yupResolver(formSchema) }
+
+    const {reset, register, handleSubmit, watch, formState: { errors } } = useForm(formOptions);
+    // Submitting the signup form data to the api
+    const onSubmit = data => {
+
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,data).then(res=>{
+            enqueueSnackbar('Signup Success ,Please Login',{ variant: 'success',anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right'
+            } });
+            reset();
+        }).catch(err=>{
+            console.log(err.response)
+            enqueueSnackbar(err.response.data.message,{ variant: 'error',anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right'
+  } });        })
+
+    }
+
+
   return (
     <>
+
+
       <div className={displayAuth ? 'body_overlay open' : 'body_overlay'}></div>
       <div
         className={
@@ -719,13 +771,15 @@ const Navbar = () => {
                         <span>Or Register with</span>
                       </span>
 
-                      <form>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                         <div className='form-group'>
                           <input
                             type='text'
                             placeholder='Username'
                             className='form-control'
+                              {...register("username")}
                           />
+                            {errors.username && <span style={{color:"red"}}>{errors.username?.message}</span>}
                         </div>
 
                         <div className='form-group'>
@@ -733,7 +787,11 @@ const Navbar = () => {
                             type='email'
                             placeholder='Email'
                             className='form-control'
+                              {...register("email")}
+
                           />
+                            {errors.email && <span style={{color:"red"}}>{errors.email?.message}</span>}
+
                         </div>
 
                         <div className='form-group'>
@@ -741,7 +799,10 @@ const Navbar = () => {
                             type='password'
                             placeholder='Password'
                             className='form-control'
+                              {...register("password", { required: true })}
                           />
+                            {errors.password && <span style={{color:"red"}}>Please Enter Password</span>}
+
                         </div>
 
                         <div className='form-group'>
@@ -749,8 +810,12 @@ const Navbar = () => {
                             type='password'
                             placeholder='Confirm Password'
                             className='form-control'
+                              {...register('confirmPwd')}
+
                           />
                         </div>
+                            {errors.confirmPwd && <span style={{color:"red"}}>{errors.confirmPwd?.message}</span>}
+
 
                         <button type='submit'>Register Now</button>
                       </form>

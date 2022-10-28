@@ -15,6 +15,8 @@ import '../styles/responsive.css';
 import Layout from '../components/_App/Layout';
 import Loader from '../components/Shared/Loader';
 import GoTop from '../components/Shared/GoTop';
+import { SnackbarProvider } from 'notistack';
+
 
 function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(true);
@@ -25,17 +27,20 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <Layout>
-        <IndiceProvider>
+    <SnackbarProvider maxSnack={3}>
+        <Layout>
+            <IndiceProvider>
 
-          <Component {...pageProps} />
+                <Component {...pageProps} />
 
-          <Loader loading={loading} />
+                <Loader loading={loading} />
 
-          <GoTop scrollStepInPx='100' delayInMs='10.50' />
+                <GoTop scrollStepInPx='100' delayInMs='10.50' />
 
-        </IndiceProvider>
-      </Layout>
+            </IndiceProvider>
+        </Layout>
+    </SnackbarProvider>
+
     </>
   );
 }
