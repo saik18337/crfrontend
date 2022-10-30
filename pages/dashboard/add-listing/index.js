@@ -4,23 +4,28 @@ import DashboardNavbar from '../../../components/Dashboard/DashboardNavbar';
 
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
 
 const AddListing = () => {
+  const defaultState={
+    title:"",
+    description:"",
+    category:"",
+    keywords:"",
+    city:"",
+    address:"",
+    state:"",
+    zipcode:"",
+    email:"",
+    pricing:"",
+
+
+}
   const [files, setFiles] = useState([]);
-  const [state,setState]=useState({
-      title:"",
-      description:"",
-      category:"",
-      keywords:"",
-      city:"",
-      address:"",
-      state:"",
-      zipcode:"",
-      email:"",
-      pricing:"",
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-
-  })
+  const [state,setState]=useState(defaultState)
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
@@ -51,6 +56,42 @@ const AddListing = () => {
   // On change Handler for Fields
 
     const inputChange=(event)=>{
+      setState({...state,[event.target.name]:event.target.value})
+
+    }
+
+    const submitForm=()=>{
+
+      const formData=new FormData();
+      for (let i = 0 ; i < files.length ; i++) {
+        formData.append("multiplefiles", files[i]);
+    }
+    formData.append("title",state.title);
+    formData.append("pricing",state.pricing);
+    formData.append("description",state.description)
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    
+    }
+
+    axios.post(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/addListing`,formData, {
+      headers: headers
+    }).then(response=>{
+      setState(defaultState)
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
+      setFiles([]);
+      enqueueSnackbar('Listing Will Be Visible In Few Seconds',{ variant: 'success',anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+    } });
+
+    }).catch(err=>{
+      console.log(err);
+    })
+
+ 
+
 
     }
 
@@ -93,6 +134,9 @@ const AddListing = () => {
                   type='text'
                   className='form-control'
                   placeholder='Name of your business'
+                  name='title'
+                  value={state.title}
+                  onChange={inputChange}
                 />
               </div>
             </div>
@@ -102,7 +146,8 @@ const AddListing = () => {
                 <label>
                   <i className='bx bx-duplicate'></i> Type / Category:
                 </label>
-                <select className='dashbaord-category-select'>
+                <select className='dashbaord-category-select'   name='category'
+                  onChange={inputChange}>
                   <option>Select Category</option>
                   <option>Shops</option>
                   <option>Hotels</option>
@@ -122,6 +167,9 @@ const AddListing = () => {
                   type='text'
                   className='form-control'
                   placeholder='Maximum 15 , should be separated by commas'
+                  name='keywords'
+                  value={state.keywords}
+                  onChange={inputChange}
                 />
               </div>
             </div>
@@ -137,7 +185,8 @@ const AddListing = () => {
                 <label>
                   <i className='bx bx-menu-alt-left'></i> City:
                 </label>
-                <select className='dashbaord-category-select'>
+                <select className='dashbaord-category-select'   name='city'
+                  onChange={inputChange}>
                   <option>Select City</option>
                   <option>New York</option>
                   <option>London</option>
@@ -157,6 +206,9 @@ const AddListing = () => {
                   type='text'
                   className='form-control'
                   placeholder='e.g. 55 County Laois'
+                  name='address'
+                  value={state.address}
+                  onChange={inputChange}
                 />
               </div>
             </div>
@@ -166,7 +218,8 @@ const AddListing = () => {
                 <label>
                   <i className='bx bx-menu-alt-left'></i> State:
                 </label>
-                <input type='text' className='form-control' />
+                <input type='text' className='form-control' value={state.state} name='state'
+                  onChange={inputChange} />
               </div>
             </div>
 
@@ -175,7 +228,8 @@ const AddListing = () => {
                 <label>
                   <i className='bx bx-menu-alt-left'></i> Zip-Code:
                 </label>
-                <input type='text' className='form-control' />
+                <input type='text' className='form-control'  value={state.zipcode}   name='zipcode'
+                  onChange={inputChange}/>
               </div>
             </div>
           </div>
@@ -210,6 +264,9 @@ const AddListing = () => {
                   rows='7'
                   className='form-control'
                   placeholder='Details...'
+                  name='description'
+                  value={state.description}
+                  onChange={inputChange}
                 ></textarea>
               </div>
             </div>
@@ -220,7 +277,8 @@ const AddListing = () => {
                   <i className='bx bx-envelope'></i> Email Address:{' '}
                   <span>(optional)</span>
                 </label>
-                <input type='email' className='form-control' />
+                <input type='email' className='form-control'   name='email'
+                  onChange={inputChange} />
               </div>
             </div>
 
@@ -898,12 +956,13 @@ const AddListing = () => {
             <label>
               <i className='bx bx-purchase-tag'></i> Pricing:
             </label>
-            <input type='text' className='form-control' placeholder='$542.00' />
+            <input type='text' className='form-control' placeholder='$542.00' value={state.pricing}   name='pricing'
+                  onChange={inputChange} />
           </div>
         </div>
 
         <div className='add-listings-btn'>
-          <button type='submit'>Submit Listings</button>
+          <button type='submit' onClick={submitForm}>Submit Listings</button>
         </div>
 
         <div className='flex-grow-1'></div>
