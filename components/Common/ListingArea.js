@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import Link from "next/link";
+import axios from "axios";
 
 const ListingArea = () => {
+  const [listings,setListings]=useState([]);
+
+  useEffect(()=>{
+     axios.get(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/getListing`).then(data=>{
+      setListings(data.data.data)
+     }).catch(err=>{
+      console.log(err)
+     })
+
+
+  },[])
+  
   return (
     <>
       <section className="listings-area ptb-100 bg-f9f9f9">
@@ -36,67 +49,10 @@ const ListingArea = () => {
             modules={[Pagination]}
             className="listings-slides"
           >
-            <SwiperSlide>
-              <div className="single-listings-box">
-                <div className="listings-image">
-                  <img src="/images/listings/listings1.jpg" alt="image" />
-                  <Link href="/single-listings">
-                    <a className="link-btn"></a>
-                  </Link>
-                  <a href="#" className="bookmark-save">
-                    <i className="flaticon-heart"></i>
-                  </a>
-                  <a href="#" className="category">
-                    <i className="flaticon-cooking"></i>
-                  </a>
-                </div>
 
-                <div className="listings-content">
-                  <div className="author">
-                    <div className="d-flex align-items-center">
-                      <img src="/images/user1.jpg" alt="image" />
-                      <span>Taylor</span>
-                    </div>
-                  </div>
-                  <ul className="listings-meta">
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-furniture-and-household"></i>
-                        Restaurant
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-pin"></i> New York, USA
-                      </a>
-                    </li>
-                  </ul>
-                  <h3>
-                    <Link href="/single-listings">
-                      <a>Chipotle Mexican Grill</a>
-                    </Link>
-                  </h3>
-                  <span className="status">
-                    <i className="flaticon-save"></i> Open Now
-                  </span>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="rating">
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <span className="count">(45)</span>
-                    </div>
-                    <div className="price">
-                      Start From <span>$150</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
+            {
+              listings.map(ele=>(
+                <SwiperSlide>
               <div className="single-listings-box">
                 <div className="listings-image">
                   <Swiper 
@@ -105,23 +61,22 @@ const ListingArea = () => {
                     modules={[Navigation]} 
                     className="listings-image-slides"
                   >
-                    <SwiperSlide>
-                      <div className="single-image">
-                        <img src="/images/listings/listings2.jpg" alt="image" />
-                        <Link href="/single-listings">
-                          <a className="link-btn"></a>
-                        </Link>
-                      </div>
-                    </SwiperSlide>
+                    {
+                      ele.files.split(",").map(file=>(
+                        <SwiperSlide>
+                        <div className="single-image">
+                          <img src={file} alt="image" />
+                          <Link href="/single-listings">
+                            <a className="link-btn"></a>
+                          </Link>
+                        </div>
+                      </SwiperSlide>
 
-                    <SwiperSlide>
-                      <div className="single-image">
-                        <img src="/images/listings/listings3.jpg" alt="image" />
-                        <Link href="/single-listings">
-                          <a className="link-btn"></a>
-                        </Link>
-                      </div>
-                    </SwiperSlide>
+                      ))
+                    }
+                   
+
+                  
                   </Swiper>
 
                   <a href="#" className="bookmark-save">
@@ -147,13 +102,13 @@ const ListingArea = () => {
                     </li>
                     <li>
                       <a href="#">
-                        <i className="flaticon-pin"></i> Los Angeles, USA
+                        <i className="flaticon-pin"></i> {ele.location}
                       </a>
                     </li>
                   </ul>
                   <h3>
                     <Link href="/single-listings">
-                      <a>The Beverly Hills Hotel</a>
+                      <a>{ele.title}</a>
                     </Link>
                   </h3>
                   <span className="status">
@@ -169,152 +124,17 @@ const ListingArea = () => {
                       <span className="count">(10)</span>
                     </div>
                     <div className="price">
-                      Start From <span>$200</span>
+                      Start From <span>{ele.price}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
+              ))
+            }
+         
 
-            <SwiperSlide>
-              <div className="single-listings-box">
-                <div className="listings-image">
-                  <img src="/images/listings/listings3.jpg" alt="image" />
-                  <Link href="/single-listings">
-                    <a className="link-btn"></a>
-                  </Link>
-
-                  <a href="#" className="bookmark-save">
-                    <i className="flaticon-heart"></i>
-                  </a>
-                  <a href="#" className="category">
-                    <i className="flaticon-cooking"></i>
-                  </a>
-                </div>
-
-                <div className="listings-content">
-                  <div className="author">
-                    <div className="d-flex align-items-center">
-                      <img src="/images/user3.jpg" alt="image" />
-                      <span>James</span>
-                    </div>
-                  </div>
-                  <ul className="listings-meta">
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-shopping-bags"></i> Shopping
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-pin"></i> Bangkok, Thailand
-                      </a>
-                    </li>
-                  </ul>
-                  <h3>
-                    <Link href="/single-listings">
-                      <a>Central Shopping Center</a>
-                    </Link>
-                  </h3>
-                  <span className="status status-close">
-                    <i className="flaticon-save"></i> Close Now
-                  </span>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="rating">
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star-half"></i>
-                      <span className="count">(35)</span>
-                    </div>
-                    <div className="price">
-                      Start From <span>$110</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div className="single-listings-box">
-                <div className="listings-image">
-                  <Swiper 
-                    loop={true}
-                    navigation={true} 
-                    modules={[Navigation]} 
-                    className="listings-image-slides"
-                  >
-                    <SwiperSlide>
-                      <div className="single-image">
-                        <img src="/images/listings/listings2.jpg" alt="image" />
-                        <Link href="/single-listings">
-                          <a className="link-btn"></a>
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                      <div className="single-image">
-                        <img src="/images/listings/listings3.jpg" alt="image" />
-                        <Link href="/single-listings">
-                          <a className="link-btn"></a>
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-                  </Swiper>
-
-                  <a href="#" className="bookmark-save">
-                    <i className="flaticon-heart"></i>
-                  </a>
-                  <a href="#" className="category">
-                    <i className="flaticon-cooking"></i>
-                  </a>
-                </div>
-
-                <div className="listings-content">
-                  <div className="author">
-                    <div className="d-flex align-items-center">
-                      <img src="/images/user4.jpg" alt="image" />
-                      <span>Andy</span>
-                    </div>
-                  </div>
-                  <ul className="listings-meta">
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-cleansing"></i> Beauty
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i className="flaticon-pin"></i> Suwanee, USA
-                      </a>
-                    </li>
-                  </ul>
-                  <h3>
-                    <Link href="/single-listings">
-                      <a>Indice Beauty Center</a>
-                    </Link>
-                  </h3>
-                  <span className="status">
-                    <i className="flaticon-save"></i> Open Now
-                  </span>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="rating">
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bx-star"></i>
-                      <i className="bx bx-star"></i>
-                      <span className="count">(15)</span>
-                    </div>
-                    <div className="price">
-                      Start From <span>$100</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
+            
           </Swiper>
         </div>
 

@@ -7,6 +7,20 @@ import { useDropzone } from 'react-dropzone';
 
 const AddListing = () => {
   const [files, setFiles] = useState([]);
+  const [state,setState]=useState({
+      title:"",
+      description:"",
+      category:"",
+      keywords:"",
+      city:"",
+      address:"",
+      state:"",
+      zipcode:"",
+      email:"",
+      pricing:"",
+
+
+  })
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles) => {
@@ -33,6 +47,13 @@ const AddListing = () => {
     },
     [files]
   );
+
+  // On change Handler for Fields
+
+    const inputChange=(event)=>{
+
+    }
+
 
   return (
     <>
