@@ -65,8 +65,8 @@ const ListingArea = () => {
                       ele.files.split(",").map(file=>(
                         <SwiperSlide>
                         <div className="single-image">
-                          <img src={file} alt="image" />
-                          <Link href="/single-listings">
+                          <img src={file} alt="image"   />
+                          <Link href={`/single-listings/${ele.id}`}>
                             <a className="link-btn"></a>
                           </Link>
                         </div>
