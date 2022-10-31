@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useForm } from "react-hook-form";
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import axios  from "axios";
+import axios from "axios";
 import { useSnackbar } from 'notistack';
 
 
@@ -49,47 +49,52 @@ const Navbar = () => {
 
   useEffect(() => {
     let abortController = new AbortController();
-     // your async action is here
-      return () => {
-        abortController.abort();
-      }
-    }, []);
+    // your async action is here
+    return () => {
+      abortController.abort();
+    }
+  }, []);
 
 
   // Signup Form Submit
 
-    // Putting up form validation here --->
-    const formSchema = Yup.object().shape({
-        password: Yup.string()
-        .required('Password is mendatory')
-        .min(3, 'Password must be at 3 char long'),
-        username:Yup.string()
-        .required('Username Is Required')
-        .min(3, 'Username'),
-        confirmPwd: Yup.string()
-        .required('Password is mandatory')
-        .oneOf([Yup.ref('password')], 'Passwords does not match'),
+  // Putting up form validation here --->
+  const formSchema = Yup.object().shape({
+    password: Yup.string()
+      .required('Password is mendatory')
+      .min(3, 'Password must be at 3 char long'),
+    username: Yup.string()
+      .required('Username Is Required')
+      .min(3, 'Username'),
+    confirmPwd: Yup.string()
+      .required('Password is mandatory')
+      .oneOf([Yup.ref('password')], 'Passwords does not match'),
+  })
+  const formOptions = { resolver: yupResolver(formSchema) }
+
+  const { reset, register, handleSubmit, watch, formState: { errors } } = useForm(formOptions);
+  // Submitting the signup form data to the api
+  const onSubmit = data => {
+
+    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, data).then(res => {
+      enqueueSnackbar('Signup Success ,Please Login', {
+        variant: 'success', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      });
+      reset();
+    }).catch(err => {
+      console.log(err.response)
+      enqueueSnackbar(err.response.data.message, {
+        variant: 'error', anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      });
     })
-    const formOptions = { resolver: yupResolver(formSchema) }
 
-    const {reset, register, handleSubmit, watch, formState: { errors } } = useForm(formOptions);
-    // Submitting the signup form data to the api
-    const onSubmit = data => {
-
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,data).then(res=>{
-            enqueueSnackbar('Signup Success ,Please Login',{ variant: 'success',anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right'
-            } });
-            reset();
-        }).catch(err=>{
-            console.log(err.response)
-            enqueueSnackbar(err.response.data.message,{ variant: 'error',anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right'
-  } });        })
-
-    }
+  }
 
 
   return (
@@ -117,7 +122,7 @@ const Navbar = () => {
               <div className='logo'>
                 <Link href='/'>
                   <a>
-                    <img src='/images/logo.png' alt='logo' />
+                    {<img src='/images/logo.png' alt='logo' />}
                   </a>
                 </Link>
               </div>
@@ -129,8 +134,8 @@ const Navbar = () => {
           <div className='container-fluid'>
             <nav className='navbar navbar-expand-md navbar-light'>
               <Link href='/'>
-                <a className='navbar-brand'>
-                  <img src='/images/logo.png' alt='logo' />
+                <a className='navbar-brand' style={{width:"19rem", height:"4vw", marginRight:"17vw"}}>
+                  <img src='/images/logo3.png' alt='logo' />
                 </a>
               </Link>
 
@@ -140,6 +145,7 @@ const Navbar = () => {
                     <i className='flaticon-search'></i>
                   </label>
                   <input
+                    style={{width:"13rem" }}
                     type='text'
                     className='input-search'
                     placeholder='What are you looking for?'
@@ -147,11 +153,11 @@ const Navbar = () => {
                 </form>
 
                 <ul className='navbar-nav'>
-                  <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                  <li className='nav-item' style={{ marginLeft: "20px" }}>
+                    <a href='#' className=' nav-link' >
                       Home
                     </a>
-                    <ul className='dropdown-menu'>
+                    {/* <ul className='dropdown-menu'>
                       <li className='nav-item'>
                         <Link href='/' activeClassName='active'>
                           <a className='nav-link'>Home Demo - 1</a>
@@ -175,14 +181,14 @@ const Navbar = () => {
                           <a className='nav-link'>Home Demo - 4</a>
                         </Link>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
 
-                  <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                  {/* <li className='nav-item'>
+                    <a href='#' className=' nav-link'>
                       Listings
-                    </a>
-                    <ul className='dropdown-menu'>
+                    </a> */}
+                    {/* <ul className='dropdown-menu'>
                       <li className='nav-item'>
                         <a href='#' className='nav-link'>
                           List Layout <i className='bx bx-chevron-right'></i>
@@ -310,14 +316,14 @@ const Navbar = () => {
                           <a className='nav-link'>Author Profile</a>
                         </Link>
                       </li>
-                    </ul>
-                  </li>
+                    </ul> */}
+                  {/* </li> */}
 
-                  <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                  {/* <li className='nav-item'>
+                    <a href='#' className='nav-link' style={{ width: "84px" }}>
                       User Panel
-                    </a>
-                    <ul className='dropdown-menu'>
+                    </a> */}
+                    {/* <ul className='dropdown-menu'>
                       <li className='nav-item'>
                         <Link href='/dashboard' activeClassName='active'>
                           <a className='nav-link'>Dashboard</a>
@@ -401,14 +407,14 @@ const Navbar = () => {
                           <a className='nav-link'>Invoice</a>
                         </Link>
                       </li>
-                    </ul>
-                  </li>
+                    </ul> */}
+                  {/* </li> */}
 
-                  <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                  <li className='nav-item mx-4'>
+                    <a href='#' className='nav-link'>
                       Shop
                     </a>
-                    <ul className='dropdown-menu'>
+                    {/* <ul className='dropdown-menu'>
                       <li className='nav-item'>
                         <Link href='/shop' activeClassName='active'>
                           <a className='nav-link'>Products List</a>
@@ -432,14 +438,14 @@ const Navbar = () => {
                           <a className='nav-link'>Products Details</a>
                         </Link>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
 
                   <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                    <a href='#' className='nav-link'>
                       Blog
                     </a>
-                    <ul className='dropdown-menu'>
+                    {/* <ul className='dropdown-menu'>
                       <li className='nav-item'>
                         <Link href='/blog-1' activeClassName='active'>
                           <a className='nav-link'>Grid (2 in Row)</a>
@@ -503,11 +509,11 @@ const Navbar = () => {
                           </li>
                         </ul>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
 
-                  <li className='nav-item'>
-                    <a href='#' className='dropdown-toggle nav-link'>
+                  {/* <li className='nav-item'>
+                    <a href='#' className='nav-link' style={{marginRight:"15px"}}>
                       Pages
                     </a>
                     <ul className='dropdown-menu'>
@@ -587,12 +593,13 @@ const Navbar = () => {
                         </Link>
                       </li>
                     </ul>
-                  </li>
+                  </li> */}
                 </ul>
 
                 <div className='others-option d-flex align-items-center'>
                   <div className='option-item'>
                     <span
+                      style={{width:"9vw"}}
                       data-toggle='modal'
                       onClick={toggleAuth}
                       className='auth-one'
@@ -771,15 +778,15 @@ const Navbar = () => {
                         <span>Or Register with</span>
                       </span>
 
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                      <form onSubmit={handleSubmit(onSubmit)}>
                         <div className='form-group'>
                           <input
                             type='text'
                             placeholder='Username'
                             className='form-control'
-                              {...register("username")}
+                            {...register("username")}
                           />
-                            {errors.username && <span style={{color:"red"}}>{errors.username?.message}</span>}
+                          {errors.username && <span style={{ color: "red" }}>{errors.username?.message}</span>}
                         </div>
 
                         <div className='form-group'>
@@ -787,10 +794,10 @@ const Navbar = () => {
                             type='email'
                             placeholder='Email'
                             className='form-control'
-                              {...register("email")}
+                            {...register("email")}
 
                           />
-                            {errors.email && <span style={{color:"red"}}>{errors.email?.message}</span>}
+                          {errors.email && <span style={{ color: "red" }}>{errors.email?.message}</span>}
 
                         </div>
 
@@ -799,9 +806,9 @@ const Navbar = () => {
                             type='password'
                             placeholder='Password'
                             className='form-control'
-                              {...register("password", { required: true })}
+                            {...register("password", { required: true })}
                           />
-                            {errors.password && <span style={{color:"red"}}>Please Enter Password</span>}
+                          {errors.password && <span style={{ color: "red" }}>Please Enter Password</span>}
 
                         </div>
 
@@ -810,16 +817,16 @@ const Navbar = () => {
                             type='password'
                             placeholder='Confirm Password'
                             className='form-control'
-                              {...register('confirmPwd')}
+                            {...register('confirmPwd')}
 
                           />
                         </div>
-                            {errors.confirmPwd && <span style={{color:"red"}}>{errors.confirmPwd?.message}</span>}
+                        {errors.confirmPwd && <span style={{ color: "red" }}>{errors.confirmPwd?.message}</span>}
 
 
                         <button type='submit'>Register Now</button>
                       </form>
-                      
+
                       <span className='already-account'>
                         Already have an account? <a href='#'>Login Now</a>
                       </span>

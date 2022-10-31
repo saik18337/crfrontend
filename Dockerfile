@@ -1,6 +1,7 @@
 # Dockerfile
 
 # base image
+#Node js image
 FROM node:alpine
 
 # create & set working directory
