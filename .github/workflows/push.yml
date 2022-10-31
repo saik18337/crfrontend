@@ -1,5 +1,11 @@
 name: This a workflow title
-on: [push] # When pushing to any branch then run this action any
+on:
+  push:
+    branches:
+      - master
+    
+  
+ 
 # Env variable
 env:
   DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
