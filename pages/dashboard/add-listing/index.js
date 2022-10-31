@@ -75,7 +75,7 @@ const AddListing = () => {
     
     }
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/addListing`,formData, {
+    axios.post(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/listing`,formData, {
       headers: headers
     }).then(response=>{
       setState(defaultState)

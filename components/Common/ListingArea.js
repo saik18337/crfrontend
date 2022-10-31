@@ -8,7 +8,7 @@ const ListingArea = () => {
   const [listings,setListings]=useState([]);
 
   useEffect(()=>{
-     axios.get(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/getListing`).then(data=>{
+     axios.get(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/listing`).then(data=>{
       setListings(data.data.data)
      }).catch(err=>{
       console.log(err)
