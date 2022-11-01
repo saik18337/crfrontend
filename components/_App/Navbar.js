@@ -132,7 +132,7 @@ const Navbar = () => {
 
         <div className={showMenu ? 'miran-nav show' : 'miran-nav'}>
           <div className='container-fluid'>
-            <nav className='navbar navbar-expand-md navbar-light'>
+            <nav className='navbar navbar-expand-md navbar-light' >
               <Link href='/'>
                 <a className='navbar-brand' style={{width:"19rem", height:"4vw", marginRight:"17vw"}}>
                   <img src='/images/logo3.png' alt='logo' />

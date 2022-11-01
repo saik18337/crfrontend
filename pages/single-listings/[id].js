@@ -38,7 +38,7 @@ useEffect(()=>{
 
       <section className='listings-details-area pb-70'>
         <div className='listings-details-image'>
-          <img src={state?.files?.split(",")[0]} alt='image'  width={"100%"} height={"50%"}/>
+          <img src={state?.files?.split(",")[0]} alt='image'  style={{width:"100%", height:"379px"}}/>
 
           <div className='container'>
             <div className='container'>
