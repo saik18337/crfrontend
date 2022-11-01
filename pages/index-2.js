@@ -1,41 +1,41 @@
-// import NavbarTwo from '../components/_App/NavbarTwo';
-// import Banner from '../components/HomeTwo/Banner';
-// import CategoryTwo from '../components/Common/CategoryTwo';
-// import ListingAreaTwo from '../components/Common/ListingAreaTwo';
-// import Destinations from '../components/Common/Destinations';
-// import Feedback from '../components/Common/Feedback';
-// import EventsArea from '../components/HomeTwo/EventsArea';
-// import HowItWorks from '../components/Common/HowItWorks';
-// import Blog from '../components/HomeTwo/Blog';
-// import AppDownload from '../components/Common/AppDownload';
-// import Footer from '../components/_App/Footer';
+import NavbarTwo from '../components/_App/NavbarTwo';
+import Banner from '../components/HomeTwo/Banner';
+import CategoryTwo from '../components/Common/CategoryTwo';
+import ListingAreaTwo from '../components/Common/ListingAreaTwo';
+import Destinations from '../components/Common/Destinations';
+import Feedback from '../components/Common/Feedback';
+import EventsArea from '../components/HomeTwo/EventsArea';
+import HowItWorks from '../components/Common/HowItWorks';
+import Blog from '../components/HomeTwo/Blog';
+import AppDownload from '../components/Common/AppDownload';
+import Footer from '../components/_App/Footer';
 
-// const Index2 = () => {
-//   return (
-//     <>
-//       <NavbarTwo />
+const Index2 = () => {
+  return (
+    <>
+      <NavbarTwo />
 
-//       <Banner />
+      <Banner />
 
-//       <CategoryTwo titleOne={true} />
+      <CategoryTwo titleOne={true} />
 
-//       <ListingAreaTwo bgColor="bg-f9f9f9 pb-100" titleOne={true} />
+      <ListingAreaTwo bgColor="bg-f9f9f9 pb-100" titleOne={true} />
 
-//       <Destinations titleOne={true} paddingBottom70="pb-70" />
+      <Destinations titleOne={true} paddingBottom70="pb-70" />
 
-//       <Feedback title={true} bgImage="bg-image" />
+      <Feedback title={true} bgImage="bg-image" />
 
-//       <EventsArea />
+      <EventsArea />
 
-//       <HowItWorks bgColor="bg-f9f9f9" />
+      <HowItWorks bgColor="bg-f9f9f9" />
 
-//       <Blog />
+      <Blog />
 
-//       <AppDownload />
+      <AppDownload />
 
-//       <Footer />
-//     </>
-//   );
-// };
+      <Footer />
+    </>
+  );
+};
 
-// export default Index2;
+export default Index2;
