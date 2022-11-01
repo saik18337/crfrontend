@@ -1,20 +1,44 @@
-import React from 'react';
+import React ,{useEffect, useState} from 'react';
+import { useRouter } from 'next/router'
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import Link from 'next/link';
+import axios from 'axios';
 
 //components
-import NavbarTwo from '../components/_App/NavbarTwo';
-import Footer from '../components/_App/Footer';
+import NavbarTwo from '../../components/_App/NavbarTwo';
+import Footer from '../../components/_App/Footer';
 
 const SingleListings = ({ images }) => {
+const [state,setState]=useState({});
+const router = useRouter()
+const { id } = router.query
+
+
+useEffect(()=>{
+  if (!id) {
+    return;  // NOTE: router.query might be empty during initial render
+  }
+
+
+  axios.get(`${process.env.NEXT_PUBLIC_API_URLBACKEND}/listing/${id}`).then(response=>{
+    setState(response.data.data[0])
+
+  }).catch(err=>{
+    console.log(err);
+  })
+
+},[id])
+
+
   return (
     <>
       <NavbarTwo />
 
       <section className='listings-details-area pb-70'>
         <div className='listings-details-image'>
-          <img src='/images/listings-details.jpg' alt='image' />
+          <img src={state?.files?.split(",")[0]} alt='image'  width={"100%"} height={"50%"}/>
 
           <div className='container'>
             <div className='container'>
@@ -24,7 +48,7 @@ const SingleListings = ({ images }) => {
                   Restaurant
                 </span>
 
-                <h3>Chipotle Mexican Grill</h3>
+                <h3>{state.title}</h3>
 
                 <div className='rating d-flex align-items-center'>
                   <span className='bx bxs-star checked'></span>
@@ -49,7 +73,7 @@ const SingleListings = ({ images }) => {
                   <li className='location'>
                     <i className='bx bx-map'></i>
                     <span>Location</span>
-                    New York, USA
+                    {state.location}
                   </li>
                 </ul>
               </div>
@@ -95,29 +119,11 @@ const SingleListings = ({ images }) => {
           <div className='row'>
             <div className='col-lg-8 col-md-12'>
               <div className='listings-details-desc'>
-                <h3>Chipotle Mexican Grill</h3>
+                <h3>{state.title}</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse ultrices gravida. Risus commodo viverra
-                  maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Quis ipsum
-                  suspendisse ultrices gravida. Risus commodo viverra maecenas
-                  accumsan lacus vel facilisis.
+                 {state.description}
                 </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse ultrices gravida. Risus commodo viverra
-                  maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit
-                  amet, consectetur.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse ultrices gravida.
-                </p>
+              
 
                 <h3>Amenities</h3>
                 <ul className='amenities-list'>
@@ -185,33 +191,25 @@ const SingleListings = ({ images }) => {
 
                 <h3>Gallery</h3>
                 <div id='gallery'>
+                 
                   <div className="row justify-content-center">
-                    <div className="col-lg-4 col-md-6">
+                  {
+                    state?.files?.split(",").map(ele=>(
+                      <div className="col-lg-4 col-md-6">
                       <div className='single-image-bpx'>
                         <img
-                          src='/images/gallery/gallery1.jpg'
+                          src={ele}
                           alt='image'
                         />
                       </div>
                     </div>
+                    ))
+                  }
+                    
 
-                    <div className="col-lg-4 col-md-6">
-                      <div className='single-image-bpx'>
-                        <img
-                          src='/images/gallery/gallery2.jpg'
-                          alt='image'
-                        />
-                      </div>
-                    </div>
+                  
 
-                    <div className="col-lg-4 col-md-6">
-                      <div className='single-image-bpx'>
-                        <img
-                          src='/images/gallery/gallery3.jpg'
-                          alt='image'
-                        />
-                      </div>
-                    </div>
+                   
                   </div>
                 </div>
 
