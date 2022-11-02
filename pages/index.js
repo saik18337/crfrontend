@@ -9,6 +9,7 @@ import HowItWorks from '../components/Common/HowItWorks';
 import Blog from '../components/Common/Blog';
 import AppDownload from '../components/Common/AppDownload';
 import Footer from '../components/_App/Footer';
+// import ListingAreaTwo from '../components/Common/ListingAreaTwo';
 
 const Index = () => {
   return (
