@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Link from '../../utils/ActiveLink';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useForm } from "react-hook-form";
@@ -8,28 +8,13 @@ import { useSnackbar } from 'notistack';
 import CommonServices from '../../services.js';
 import { AppContext } from '../../contexts/AppContext';
 
-
-
-
-
-
-
-const Navbar = () => {
+const Header = () => {
   const [displayAuth, setDisplayAuth] = useState(false);
   const [displayMiniAuth, setDisplayMiniAuth] = useState(false);
-  const [showSearchBar, setShowSearch] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(0)
   const context = useContext(AppContext)
   const { login } = context;
   const [sticky, setSticky] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const searchRef = useRef()
-  const setShowSearchBar = () => {
-    setShowSearch(true);
-    setTimeout(() => {
-      searchRef.current.focus();
-    })
-  }
 
 
   //sticky menu
@@ -41,30 +26,24 @@ const Navbar = () => {
       setSticky(false);
     }
   };
-  if (typeof window !== 'undefined') {
-    // browser code
+  useEffect(() => {
     window.addEventListener('scroll', showStickyMenu);
-  }
+    return () => {
+        window.removeEventListener('scroll', showStickyMenu);
+    }
+  },[])
 
   const toggleAuth = () => {
     setDisplayAuth(!displayAuth);
   };
-  const toggleExtraOpts = () => {
+  const toggleMiniAuth = () => {
     setDisplayMiniAuth(!displayMiniAuth);
   };
 
   const [showMenu, setshowMenu] = useState(false);
 
   const toggleMenu = () => {
-    setshowMenu((prevVal) => {
-      if(!prevVal) {
-        document.body.style.overflow = 'hidden';
-      }
-      else {
-        document.body.style.overflow = 'inherit';
-      }
-      return !prevVal
-    });
+    setshowMenu(!showMenu);
   };
   // Signup Form Submit
 
@@ -107,9 +86,6 @@ const Navbar = () => {
         horizontal: 'right'
       }
     });
-    if(res.success) {
-      setSelectedTab(0);
-    }
   }
   const onSignin = async data => {
     const res = await CommonServices.login(data);
@@ -120,13 +96,10 @@ const Navbar = () => {
         horizontal: 'right'
       }
     });
-    if(res.success) {
-      context.setLoginData({
-        accessToken: res?.data?.access_token,
-        refreshToken: res?.data?.refresh_token
-      });
-      toggleAuth()
-    }
+    context.setLoginData({
+      accessToken: res?.data?.access_token,
+      refreshToken: res?.data?.refresh_token
+    })
   }
 
 
@@ -134,7 +107,7 @@ const Navbar = () => {
     <>
 
 
-      <div className={displayAuth ? 'body_overlay open' : 'body_overlay '}></div>
+      <div className={displayAuth ? 'body_overlay open' : 'body_overlay'}></div>
       <div
         className={
           sticky
@@ -142,7 +115,7 @@ const Navbar = () => {
             : 'navbar-area navbar-style-two'
         }
       >
-        <div className='miran-responsive-nav '>
+        <div className='miran-responsive-nav'>
           <div className='container'>
             <div className='miran-responsive-menu'>
               <div onClick={() => toggleMenu()} className='hamburger-menu'>
@@ -167,15 +140,26 @@ const Navbar = () => {
           <div className='container-fluid'>
             <nav className='navbar navbar-expand-md navbar-light' >
               <Link href='/'>
-                <a className='navbar-brand !mr-0' style={{width:"19rem", height:"4vw"}}>
+                <a className='navbar-brand' style={{width:"19rem", height:"4vw", marginRight:"17vw"}}>
                   <img src='/images/logo3.png' alt='logo' />
                 </a>
               </Link>
 
-              <div className='visible navbar-collapse mean-menu ml-32'>
+              <div className='collapse navbar-collapse mean-menu'>
+                <form className='navbar-search-box search-box-one'>
+                  <label>
+                    <i className='flaticon-search'></i>
+                  </label>
+                  <input
+                    style={{width:"13rem" }}
+                    type='text'
+                    className='input-search'
+                    placeholder='What are you looking for?'
+                  />
+                </form>
 
-                <ul className='navbar-nav whitespace-nowrap !mr-0'>
-                  <li className='nav-item !ml-5'>
+                <ul className='navbar-nav'>
+                  <li className='nav-item' style={{ marginLeft: "20px" }}>
                     <a href='#' className=' nav-link' >
                       Home
                     </a>
@@ -194,54 +178,33 @@ const Navbar = () => {
                     </a>
                   </li>
                   
-                  {
-                    login &&<li className='nav-item'>
-                      <Link
-                        href='/dashboard/add-listing'
-                        activeClassName='active'
-                      >
-                        <a className='nav-link'>
-                          Add Listing
-                        </a>
-                      </Link>
-                    </li>
-                  }
-                  {!login && <li className='nav-item w-full'>
+                  <li className='nav-item'>
+                    <Link
+                      href='/dashboard/add-listing'
+                      activeClassName='active'
+                    >
+                      <a className='nav-link no-wrap'>
+                        Add Listing
+                      </a>
+                    </Link>
+                  </li>
+                  <li className='nav-item'>
                     <a
+                      style={{width:"9vw", cursor: 'pointer'}}
                       data-toggle='modal'
                       onClick={toggleAuth}
-                      className='auth-one nav-link no-wrap w-full cursor-pointer'
+                      className='auth-one nav-link no-wrap'
                     >
                       <i className='flaticon-user'></i> Login / Register
                     </a>
                   </li>
-                }
-                <li className="self-center nav-item md-min:block hidden">
-                    
-                  <a href='#' onClick={setShowSearchBar} className={`${showSearchBar && '!hidden'} nav-link`}>
-                    <i className='flaticon-search'></i>
-                  </a>
-                  <form className={`navbar-search-box !ml-0 search-box-on ${!showSearchBar ? 'hidden' : '!block'}`}>
-                    <label>
-                      <i className='flaticon-search'></i>
-                    </label>
-                    <input
-                      style={{width:"13rem" }}
-                      type='text'
-                      onBlur={() => {
-                        if(!searchRef.current.value) {
-                          setShowSearch(false)
-                        }
-                      }}
-                      ref={searchRef}
-                      className='input-search'
-                      placeholder='What are you looking for?'
-                    />
-                  </form>
-                </li>
                   
                 </ul>
-                
+
+                <div className='others-option d-flex align-items-center'>
+
+
+                </div>
               </div>
             </nav>
           </div>
@@ -249,6 +212,49 @@ const Navbar = () => {
 
         <div className='others-option-for-responsive'>
           <div className='container'>
+            <div className='dot-menu' onClick={toggleMiniAuth}>
+              <div className='inner'>
+                <div className='circle circle-one'></div>
+                <div className='circle circle-two'></div>
+                <div className='circle circle-three'></div>
+              </div>
+            </div>
+
+            <div className={displayMiniAuth ? 'container active' : 'container'}>
+              <div className='option-inner'>
+                <div className='others-option'>
+                  <div className='option-item'>
+                    <form className='navbar-search-box'>
+                      <label>
+                        <i className='flaticon-search'></i>
+                      </label>
+                      <input
+                        type='text'
+                        className='input-search'
+                        placeholder='What are you looking for?'
+                      />
+                    </form>
+                  </div>
+
+                  <div className='option-item'>
+                    <span data-toggle='modal' onClick={toggleAuth}>
+                      <i className='flaticon-user'></i> Login / Register
+                    </span>
+                  </div>
+
+                  <div className='option-item'>
+                    <Link
+                      href='/dashboard/add-listing'
+                      activeClassName='active'
+                    >
+                      <a className='default-btn'>
+                        <i className='flaticon-more'></i> Add Listing
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -261,11 +267,10 @@ const Navbar = () => {
             : 'modal loginRegisterModal'
         }
         id='loginRegisterModal'
-        style={{padding: '20px 0px'}}
       >
         <div className='modal-dialog modal-dialog-centered'>
           <div className='modal-content'>
-            <Tabs selectedIndex={selectedTab} onSelect={(index) => setSelectedTab(index)}>
+            <Tabs>
               <button type='button' className='close' onClick={toggleAuth}>
                 <i className='bx bx-x'></i>
               </button>
@@ -335,7 +340,7 @@ const Navbar = () => {
                       </form>
 
                       <span className='dont-account'>
-                        Don't have an account? <a onClick={() => setSelectedTab(1)} href='#'>Register Now</a>
+                        Don't have an account? <a href='#'>Register Now</a>
                       </span>
                     </div>
                   </div>
@@ -414,7 +419,7 @@ const Navbar = () => {
                       </form>
 
                       <span className='already-account'>
-                        Already have an account? <a onClick={() => setSelectedTab(0)} href='#'>Login Now</a>
+                        Already have an account? <a href='#'>Login Now</a>
                       </span>
                     </div>
                   </div>
@@ -428,4 +433,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Header;

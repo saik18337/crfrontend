@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IndiceProvider } from '../contexts';
+import '../public/styles/global.css';
 
 import '../styles/bootstrap.min.css';
 import '../styles/animate.min.css';
@@ -16,6 +17,7 @@ import Layout from '../components/_App/Layout';
 import Loader from '../components/Shared/Loader';
 import GoTop from '../components/Shared/GoTop';
 import { SnackbarProvider } from 'notistack';
+import AppContextProvider from '../contexts/AppContext';
 
 
 function MyApp({ Component, pageProps }) {
@@ -26,22 +28,22 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
-    <SnackbarProvider maxSnack={3}>
-        <Layout>
-            <IndiceProvider>
+    <AppContextProvider>
+      <SnackbarProvider maxSnack={3}>
+          <Layout>
+              <IndiceProvider>
 
-                <Component {...pageProps} />
+                  <Component {...pageProps} />
 
-                <Loader loading={loading} />
+                  <Loader loading={loading} />
 
-                <GoTop scrollStepInPx='100' delayInMs='10.50' />
+                  <GoTop scrollStepInPx='100' delayInMs='10.50' />
 
-            </IndiceProvider>
-        </Layout>
-    </SnackbarProvider>
+              </IndiceProvider>
+          </Layout>
+      </SnackbarProvider>
+    </AppContextProvider>
 
-    </>
   );
 }
 
